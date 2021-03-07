@@ -58,7 +58,9 @@ appropriate for your application."
 DETECTED=$(detect_memory 512)
 export MEMORY_AVAILABLE=${MEMORY_AVAILABLE-$(bound_memory $DETECTED)}
 export WEB_MEMORY=${WEB_MEMORY-512}
+OLD_WEB_CONCURRENCY="${WEB_CONCURRENCY:-}" # we need to remember whether WEB_CONCURRENCY was set already
 export WEB_CONCURRENCY=$(calculate_concurrency $MEMORY_AVAILABLE $WEB_MEMORY)
+[[ -z "${OLD_WEB_CONCURRENCY:+isset}" || "${OLD_WEB_CONCURRENCY}" != "${WEB_CONCURRENCY}" ]] && export WEB_CONCURRENCY_SET_BY="heroku/nodejs"
 
 warn_bad_web_concurrency
 
